@@ -1,3 +1,6 @@
+// SAM D. && Bryam V.
+
+
 let addToy = false;
 
 document.addEventListener("DOMContentLoaded", () => {
@@ -72,14 +75,28 @@ document.addEventListener("DOMContentLoaded", () => {
 
 const clickHandler = () => {
   document.addEventListener('click', (event) => {
-    console.log(event.target.dataset.id)
+    console.log(event.target)
 
-    if(event.target === '.like-btn'){
+    if(event.target.matches('.like-btn')){
       const button = event.target
+      const id = button.dataset.id
+      const pTag = button.previousElementSibling
+      const currentLikes = parseInt(pTag.textContent)
+      const newLikes = currentLikes + 1
+      
+      pTag.textContent = newLikes
 
-      // const id = event.target.dataset.id
-      // const pTag = event.target.previousElementSibling.textContent 
-      console.log(button)
+      const patch = {
+        method: "PATCH", 
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({likes: newLikes}),
+      }
+      const patchURL = `http://localhost:3000/toys/${id}`
+      fetch(patchURL, patch)
+      .then(response => response.json())
+      .then(data => console.log(data))
 
       
     }
